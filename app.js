@@ -289,6 +289,32 @@ function userInterface(){
 			errorCheck(personList);
 			displayListOfPersons(personList, "descendants: ");
 			break;
+		case "trait":
+  		var typeSearch = prompt("What trait do you want to search by? type: 'gender, height, weight, eye color, or occupation'");
+  		errorCheck(typeSearch);
+  		personList = [];
+  		if(typeSearch == "eye color"){
+  			var input = prompt(typeSearch);
+  			searchByTrait("eyeColor", input);
+  		}else if(typeSearch == "height"){
+  			var heightFT = parseInt(prompt("Enter feet:")) * 12;
+				var heightFull = parseInt(prompt("Enter inches:")) + heightFT;
+				searchByTrait("height", heightFull)
+  		}else{
+  			var input = prompt(typeSearch);
+  			searchByTrait(typeSearch, input);
+  		}
+  		errorCheck(personList);
+  		displayListOfPersons(personList, "Matches:\r\n");
+  		break;
+		case "family":
+  		personList = [];
+  		var person = promptForName();
+  		errorCheck(person);
+  		getImmediateFamily(person);
+  		errorCheck(personList);
+  		displayListOfPersons(personList, "Immediate family: ");
+  		break;
 	}
 }
 
@@ -365,7 +391,6 @@ function changeDataObject(){
 }
 
 function getDescendants(person){
-	var added = '';
 	for (var i = 0; i < people.length; i++) {
 		if(people[i].parents.length != 0){
 			if(people[i].parents[0] == person.id || people[i].parents[1] == person.id)
@@ -385,3 +410,50 @@ function containsObject(obj, list) {
     }
     return false;
 }
+
+function getImmediateFamily(person){
+	getParents(person.parents);
+	getSiblings(person);
+	getSpouse(person);
+	getChildren(person);
+}
+function getParents(listPerson){
+  		for (var i = 0; i < people.length; i++) {
+				if(people[i].id == listPerson[0] || people[i].id == listPerson[1])
+  				personList.push(people[i]);
+  		}
+}
+function getPersonByID(idSearch){
+	for (var i = 0; i < people.length; i++) {
+		if(people[i].id == idSearch)
+		return people[i];
+	}
+	return undefined;
+}
+function getSiblings(person){
+  		for (var i = 0; i < people.length; i++) {
+  			if(people[i].parents[0] == person.parents[0] || people[i].parents[1] == person.parents[1] ||
+  				people[i].parents[1] == person.parents[0] || people[i].parents[0] == person.parents[1])
+  				if(people[i] != person)
+  					personList.push(people[i]);
+  		}
+}
+function getSpouse(person){
+	searchByTrait("id", person.currentSpouse);
+}
+function getChildren(person){
+	for (var i = 0; i < people.length; i++) {
+		if(people[i].parents.length != 0){
+			if(people[i].parents[0] == person.id || people[i].parents[1] == person.id)
+				if(!containsObject(people[i], personList)){
+					personList.push(people[i]);
+				}
+		}
+	}
+}
+function searchByTrait(traitType, userInput){
+  		for (var i = 0; i < people.length; i++) {
+  			if(people[i][traitType] == userInput)
+  				personList.push(people[i]);
+  		}
+  	}
