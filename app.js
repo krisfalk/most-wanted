@@ -679,6 +679,7 @@ function getImmediateFamily(person){
 	}
 }
 function getParents(listPerson){
+		if(listPerson.length != 0){
   		for (var i = 0; i < listPerson.length; i++) {
 				for (var j = 0; j < people.length; j++) {
 					if(people[j].id == listPerson[i]){
@@ -686,6 +687,7 @@ function getParents(listPerson){
 					}
 				}
   		}
+		}
 }
 function getPersonByID(idSearch){
 	for (var i = 0; i < people.length; i++) {
@@ -695,12 +697,14 @@ function getPersonByID(idSearch){
 	return undefined;
 }
 function getSiblings(person){
+	if(person.parents.length != 0){
   		for (var i = 0; i < people.length; i++) {
   			if(people[i].parents[0] == person.parents[0] || people[i].parents[1] == person.parents[1] ||
   				people[i].parents[1] == person.parents[0] || people[i].parents[0] == person.parents[1])
   				if(people[i] != person)
   					personList.push(people[i]);
   		}
+		}
 }
 function getSpouse(person){
 	searchByTrait("id", person.currentSpouse);
