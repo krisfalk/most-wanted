@@ -288,7 +288,6 @@ function userInterface(result){
   switch(result){
 		case "name":
 			var person = promptForName();
-			errorCheck(person);
 			if(person != undefined){
 				displayPerson(person, "Match: \r\n");
 			}
@@ -323,7 +322,6 @@ function userInterface(result){
 		case "traits":
 			personList = [];
 	    splitUserInput(prompt("Search up to 5 traits: divide each with a comma.\r\nTypes of terms you can choose from:\r\nage (only in the format #)\r\nage range (only in the format #-#)\r\nheight (only in the format #\'#\")\r\nweight (only in the format #lbs)\r\n occupation (single word)\r\neye color(single word)"));
-	  	errorCheck(personList);
 			if(personList.length != 0){
 				displayListOfPersons(personList);
 			}
@@ -671,19 +669,22 @@ function containsObject(obj, list) {
 
 function getImmediateFamily(person){
 	if(person != undefined){
-	getParents(person.parents);
-	getSiblings(person);
-	getSpouse(person);
-	getChildren(person);
-}
-else{
-	return undefined;
-}
+		getSpouse(person);
+		getParents(person.parents);
+		getSiblings(person);
+		getChildren(person);
+	}
+	else{
+		return undefined;
+	}
 }
 function getParents(listPerson){
-  		for (var i = 0; i < people.length; i++) {
-				if(people[i].id == listPerson[0] || people[i].id == listPerson[1])
-  				personList.push(people[i]);
+  		for (var i = 0; i < listPerson.length; i++) {
+				for (var j = 0; j < people.length; j++) {
+					if(people[j].id == listPerson[i]){
+						personList.push(people[j]);
+					}
+				}
   		}
 }
 function getPersonByID(idSearch){
