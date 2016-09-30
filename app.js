@@ -323,6 +323,12 @@ function userInterface(){
 	  	errorCheck(nextKin);
 	  	displayPerson(nextKin, "Next of kin:\r\n");
 	  	break;
+		case "traits":
+			personList = [];
+	    splitUserInput(prompt("Search up to 5 traits? divide each with comma."));
+	  	errorCheck(personList);
+			displayListOfPersons(personList);
+	  	break;
 	}
 }
 
@@ -396,6 +402,67 @@ function changeDataObject(){
 		people[index] = new Person(key, dataObject[key].firstName, dataObject[key].lastName, dataObject[key].gender, dataObject[key].dob, dataObject[key].height, dataObject[key].weight, dataObject[key].eyeColor, dataObject[key].occupation, dataObject[key].parents, dataObject[key].currentSpouse);
 		index++;
 	}
+}
+function splitUserInput(userInput){
+	var traits = [];
+	var matches = [];
+	var check = '';
+	var weight = '';
+	var height = '';
+	var ageRangeLow = '';
+	var ageRangeHigh = '';
+	var multiA = ''; //could be age(#),eyeColor(string), or occupation(string)
+	var multiB = '';
+	var multiC = '';
+
+	matches = people;
+
+	var noSpacesInput = userInput.replace(/\s+/g, '');
+	traits = noSpacesInput.split(',');
+
+	for (var i = 0; i < traits.length; i++) {
+		if(traits[i].indexOf('lbs') >= 0){
+			weight = traits[i].replace('lbs', '');
+		} else if(traits[i].indexOf('\'') >= 0){
+			check = traits[i].replace('\"', '');
+			check = check.split('\'');
+			height = Number(check[0] * 12) + Number(check[1]);
+		} else if(traits[i].indexOf('-') >= 0){
+			check = traits[i].split('-');
+			ageRangeLow = check[0];
+			ageRangeHigh = check[1];
+		} else if(multiA == ''){
+			multiA = traits[i];
+		} else if(multiB == ''){
+			multiB = traits[i];
+		} else if(multiC == ''){
+			multiC = traits[i];
+		}
+	}
+	searchFiveTraits(weight, height, ageRangeLow, ageRangeHigh, multiA, multiB, multiC);
+}
+
+function searchFiveTraits(weight, height, ageRangeLow, ageRangeHigh, multiA, multiB, multiC){
+	var matches = people;
+	if(weight != ''){
+		matches = matches.filter(function(person){if(person.weight == weight){return true;}else{return false;}});
+	}
+	if(height != ''){
+		matches = matches.filter(function(person){if(person.height == height){return true;}else{return false;}});
+	}
+	if(ageRangeLow != ''){
+		matches = matches.filter(function(person){if(getAge(person.dob) >= ageRangeLow && getAge(person.dob) <= ageRangeHigh){return true;}else{return false;}});
+	}
+	if(multiA != ''){
+		matches = matches.filter(function(person){if(multiA == getAge(person.dob) || multiA == person.eyeColor || multiA == person.occupation){return true;}else{return false;}});
+	}
+	if(multiB != ''){
+		matches = matches.filter(function(person){if(multiB == getAge(person.dob) || multiB == person.eyeColor || multiB == person.occupation){return true;}else{return false;}});
+	}
+	if(multiC != ''){
+		matches = matches.filter(function(person){if(multiC == getAge(person.dob) || multiC == person.eyeColor || multiC == person.occupation){return true;}else{return false;}});
+	}
+		personList = matches;
 }
 
 //1. Spouse 2. Child 3. Parent 4. Sibling 5. Grandchild
@@ -599,9 +666,9 @@ function getChildren(person){
 		}
 	}
 }
-function searchByTrait(traitType, userInput){
-  		for (var i = 0; i < people.length; i++) {
-  			if(people[i][traitType] == userInput)
-  				personList.push(people[i]);
-  		}
+function searchByTrait(traitType, input){
+		personList = people.filter( function(person){
+			if(person[traitType] == input) {return true;}
+			else {return false;}
+		});
   	}
