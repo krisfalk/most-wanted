@@ -273,8 +273,8 @@ mainPrompt();
 
 
 function mainPrompt(){
-	var result = prompt("What do you want to do? Type one of following to search:\r\nType 'name' to search by first and last name.\r\nType 'descendants' to see all of a person's descendants.\r\nType 'next of kin' to see person's next of kin.\r\nType 'trait' to search 1 criteria.\r\nType 'traits' to search by up to 5 criteria.\r\nType 'family' to see a person's immediate family.\r\nType 'exit' to end.");
-	if(result != "name" && result != 'descendants' && result != 'next of kin' && result != 'trait' && result != 'traits' && result != 'family' && result != 'exit'){
+	var result = prompt("What do you want to do? Type one of following to search:\r\nType 'name' to search by first and last name.\r\nType 'descendants' to see all of a person's descendants.\r\nType 'next of kin' to see person's next of kin.\r\nType 'traits' to search by up to 5 criteria.\r\nType 'family' to see a person's immediate family.\r\nType 'exit' to end.");
+	if(result != "name" && result != 'descendants' && result != 'next of kin' && result != 'traits' && result != 'family' && result != 'exit'){
 		alert("invalid entry. try again.");
 		mainPrompt();
 	}else{
@@ -289,45 +289,44 @@ function userInterface(result){
 		case "name":
 			var person = promptForName();
 			errorCheck(person);
-			displayPerson(person, "Match: \r\n");
+			if(person != undefined){
+				displayPerson(person, "Match: \r\n");
+			}
 			break;
 		case "descendants":
 			var person = promptForName();
 			personList = [];
 			getDescendants(person);
 			errorCheck(personList);
-			displayListOfPersons(personList, "descendants: ");
-			break;
-		case "trait":
-  		var typeSearch = prompt("What trait do you want to search by? type: 'gender', 'height', 'weight', 'eye color', 'age', or 'occupation''");
-			if(typeSearch != 'gender' && typeSearch != 'height' && typeSearch != 'weight' && typeSearch != 'eye color' && typeSearch != 'age' && typeSearch != 'occupation'){
-				alert("Invalid entry. Please try again.");
-				userInterface('trait');
+			if(personList.length != 0){
+				displayListOfPersons(personList, "descendants: ");
 			}
-  		personList = [];
-  		getTraitInput(typeSearch);
-  		errorCheck(personList);
-  		displayListOfPersons(personList, "Matches:\r\n");
-  		break;
+			break;
 		case "family":
   		personList = [];
   		var person = promptForName();
   		getImmediateFamily(person);
   		errorCheck(personList);
-  		displayListOfPersons(personList, "Immediate family: ");
+			if(personList.length != 0){
+  			displayListOfPersons(personList, "Immediate family: ");
+			}
   		break;
 		case "next of kin":
 	  	var person = promptForName();
 	  	personList = [];
 	  	var nextKin = getNextOfKin(person);
 	  	errorCheck(nextKin);
-	  	displayPerson(nextKin, "Next of kin:\r\n");
+			if(nextKin != undefined){
+	  		displayPerson(nextKin, "Next of kin:\r\n");
+			}
 	  	break;
 		case "traits":
 			personList = [];
 	    splitUserInput(prompt("Search up to 5 traits: divide each with a comma.\r\nTypes of terms you can choose from:\r\nage (only in the format #)\r\nage range (only in the format #-#)\r\nheight (only in the format #\'#\")\r\nweight (only in the format #lbs)\r\n occupation (single word)\r\neye color(single word)"));
 	  	errorCheck(personList);
-			displayListOfPersons(personList);
+			if(personList.length != 0){
+				displayListOfPersons(personList);
+			}
 	  	break;
 		case "exit":
 			alert("Good Bye!");
@@ -376,7 +375,13 @@ function errorCheck(check){
 }
 
 function promptForName(){
-	return getPersonByName(prompt("Enter person's first name: "),prompt("Enter person's last name: "));
+	var name = getPersonByName(prompt("Enter person's first name: "),prompt("Enter person's last name: "));
+	if(name != undefined){
+		return name;
+	}else{
+		alert("No matches for that name.");
+		return undefined;
+	}
 }
 
 function getPersonByName(firstNameSearch, lastNameSearch){
