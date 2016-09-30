@@ -269,12 +269,22 @@ var dataObject = {
 var people = [];
 var personList = [];
 changeDataObject();
-userInterface();
+mainPrompt();
 
 
+function mainPrompt(){
+	var result = prompt("What do you want to do? Type one of following to search:\r\nType 'name' to search by first and last name.\r\nType 'descendants' to see all of a person's descendants.\r\nType 'next of kin' to see person's next of kin.\r\nType 'trait' to search 1 criteria.\r\nType 'traits' to search by up to 5 criteria.\r\nType 'family' to see a person's immediate family.\r\nType 'exit' to end.");
+	if(result != "name" && result != 'descendants' && result != 'next of kin' && result != 'trait' && result != 'traits' && result != 'family' && result != 'exit'){
+		alert("invalid entry. try again.");
+		mainPrompt();
+	}else{
+		userInterface(result);
+	}
+	mainPrompt();
+}
 
-function userInterface(){
-	var result = prompt("What do you want to do? Type one of following to search:\r\n'name'\r\n'descendants'\r\n'next of kin'\r\n'trait'\r\n'traits'\r\n'age'\r\n'age range'\r\n'family'\r\nType 'exit' to end.");
+function userInterface(result){
+
   switch(result){
 		case "name":
 			var person = promptForName();
@@ -283,41 +293,31 @@ function userInterface(){
 			break;
 		case "descendants":
 			var person = promptForName();
-			errorCheck(person);
 			personList = [];
 			getDescendants(person);
 			errorCheck(personList);
 			displayListOfPersons(personList, "descendants: ");
 			break;
 		case "trait":
-  		var typeSearch = prompt("What trait do you want to search by? type: 'gender, height, weight, eye color, or occupation'");
-  		errorCheck(typeSearch);
+  		var typeSearch = prompt("What trait do you want to search by? type: 'gender', 'height', 'weight', 'eye color', 'age', or 'occupation''");
+			if(typeSearch != 'gender' && typeSearch != 'height' && typeSearch != 'weight' && typeSearch != 'eye color' && typeSearch != 'age' && typeSearch != 'occupation'){
+				alert("Invalid entry. Please try again.");
+				userInterface('trait');
+			}
   		personList = [];
-  		if(typeSearch == "eye color"){
-  			var input = prompt(typeSearch);
-  			searchByTrait("eyeColor", input);
-  		}else if(typeSearch == "height"){
-  			var heightFT = parseInt(prompt("Enter feet:")) * 12;
-				var heightFull = parseInt(prompt("Enter inches:")) + heightFT;
-				searchByTrait("height", heightFull)
-  		}else{
-  			var input = prompt(typeSearch);
-  			searchByTrait(typeSearch, input);
-  		}
+  		getTraitInput(typeSearch);
   		errorCheck(personList);
   		displayListOfPersons(personList, "Matches:\r\n");
   		break;
 		case "family":
   		personList = [];
   		var person = promptForName();
-  		errorCheck(person);
   		getImmediateFamily(person);
   		errorCheck(personList);
   		displayListOfPersons(personList, "Immediate family: ");
   		break;
 		case "next of kin":
 	  	var person = promptForName();
-	  	errorCheck(person);
 	  	personList = [];
 	  	var nextKin = getNextOfKin(person);
 	  	errorCheck(nextKin);
@@ -325,10 +325,42 @@ function userInterface(){
 	  	break;
 		case "traits":
 			personList = [];
-	    splitUserInput(prompt("Search up to 5 traits? divide each with comma."));
+	    splitUserInput(prompt("Search up to 5 traits: divide each with a comma.\r\nTypes of terms you can choose from:\r\nage (only in the format #)\r\nage range (only in the format #-#)\r\nheight (only in the format #\'#\")\r\nweight (only in the format #lbs)\r\n occupation (single word)\r\neye color(single word)"));
 	  	errorCheck(personList);
 			displayListOfPersons(personList);
 	  	break;
+		case "exit":
+			alert("Good Bye!");
+			exit();
+			return;
+	}
+}
+
+function getTraitInput(typeSearch){
+	if(typeSearch == "eye color"){
+		var input = prompt("Enter a color:");
+		searchByTrait("eyeColor", input);
+	}else if(typeSearch == "height"){
+		var heightFT = parseInt(prompt("Enter feet:")) * 12;
+		var heightFull = parseInt(prompt("Enter inches:")) + heightFT;
+		searchByTrait("height", heightFull)
+	}else if(typeSearch == "weight"){
+		var input = prompt("Enter number of pounds:");
+		searchByTrait(typeSearch, input);
+	}else if(typeSearch == "age"){
+		var input = prompt("Enter age:");
+		searchByTrait(typeSearch, input);
+	}else if(typeSearch == "occupation"){
+		var input = prompt("Enter in an occupation:")
+		searchByTrait(typeSearch, input);
+	}else if(typeSearch == "gender"){
+		var input = prompt("Type 'male' or 'female':");
+		if(input != "male" && input != 'female'){
+			alert("Selection must be 'male' or 'female'. Try again.");
+			getTraitInput("gender");
+		} else{
+		searchByTrait(typeSearch, input);
+	}
 	}
 }
 
@@ -339,7 +371,7 @@ function errorCheck(check){
   		}catch(error){
   			console.log(error.message);
   			console.log('No Data Found!');
-  			alert("Error - No Data");
+  			alert("NO DATA FOUND!!");
   		}
 }
 
@@ -468,6 +500,7 @@ function searchFiveTraits(weight, height, ageRangeLow, ageRangeHigh, multiA, mul
 //1. Spouse 2. Child 3. Parent 4. Sibling 5. Grandchild
 //6. Grandparent 7. Niece/Nephew 8. Aunt/Uncle 9. Great Grandchild 10. Great Grandparent 
 function getNextOfKin(person){
+	if(person != undefined){
 	getSpouse(person);
 	if(personList.length != 0)
 		return personList[0];
@@ -507,6 +540,7 @@ function getNextOfKin(person){
 	if(personList.length != 0){
 		return getOldestFromArray(personList);
 	}
+}
 	return undefined;
 }
 
@@ -606,6 +640,7 @@ function getOldestFromArray(listOfPeople){
   		return OldestPerson;
   	}
 function getDescendants(person){
+	if(person != undefined){
 	for (var i = 0; i < people.length; i++) {
 		if(people[i].parents.length != 0){
 			if(people[i].parents[0] == person.id || people[i].parents[1] == person.id)
@@ -615,6 +650,9 @@ function getDescendants(person){
 				}
 		}
 	}
+}else{
+	return undefined;
+}
 }
 
 function containsObject(obj, list) {
@@ -627,10 +665,15 @@ function containsObject(obj, list) {
 }
 
 function getImmediateFamily(person){
+	if(person != undefined){
 	getParents(person.parents);
 	getSiblings(person);
 	getSpouse(person);
 	getChildren(person);
+}
+else{
+	return undefined;
+}
 }
 function getParents(listPerson){
   		for (var i = 0; i < people.length; i++) {
@@ -667,8 +710,15 @@ function getChildren(person){
 	}
 }
 function searchByTrait(traitType, input){
+	if(traitType == 'age'){
+		for (var i = 0; i < people.length; i++) {
+			if(getAge(people[i].dob) == input)
+				personList.push(people[i]);
+		}
+	} else{
 		personList = people.filter( function(person){
 			if(person[traitType] == input) {return true;}
 			else {return false;}
 		});
-  	}
+	}
+}
