@@ -315,6 +315,14 @@ function userInterface(){
   		errorCheck(personList);
   		displayListOfPersons(personList, "Immediate family: ");
   		break;
+		case "next of kin":
+	  	var person = promptForName();
+	  	errorCheck(person);
+	  	personList = [];
+	  	var nextKin = getNextOfKin(person);
+	  	errorCheck(nextKin);
+	  	displayPerson(nextKin, "Next of kin:\r\n");
+	  	break;
 	}
 }
 
@@ -390,6 +398,146 @@ function changeDataObject(){
 	}
 }
 
+//1. Spouse 2. Child 3. Parent 4. Sibling 5. Grandchild
+//6. Grandparent 7. Niece/Nephew 8. Aunt/Uncle 9. Great Grandchild 10. Great Grandparent 
+function getNextOfKin(person){
+	getSpouse(person);
+	if(personList.length != 0)
+		return personList[0];
+	getChildren(person);
+	if(personList.length != 0){
+		return getOldestFromArray(personList);
+	}
+	getParents(person.parents);
+	if(personList.length != 0){
+		return getOldestFromArray(personList);
+	}
+	getSiblings(person);
+	if(personList.length != 0){
+		return getOldestFromArray(personList);
+	}
+	getGrandchildren(person);
+	if(personList.length != 0){
+		return getOldestFromArray(personList);
+	}
+	getGrandParents(person);
+	if(personList.length != 0){
+		return getOldestFromArray(personList);
+	}
+	getNieceNephews(person);
+	if(personList.length != 0){
+		return getOldestFromArray(personList);
+	}
+	getAuntUncles(person);
+	if(personList.length != 0){
+		return getOldestFromArray(personList);
+	}
+	getGreatGrandChildren(person);
+	if(personList.length != 0){
+		return getOldestFromArray(personList);
+	}
+	getGreatGrandParents(person);
+	if(personList.length != 0){
+		return getOldestFromArray(personList);
+	}
+	return undefined;
+}
+
+function getAuntUncles(person){
+	var parents = [];
+	getParents(person);
+	parents = personList;
+	personList = [];
+	for (var i = 0; i < parents.length; i++) {
+		getSiblings(parents[i]);
+	}
+}
+
+function getNieceNephews(person){
+	var siblings = [];
+	getSiblings(person);
+	siblings = personList;
+	personList = [];
+	for (var i = 0; i < siblings.length; i++) {
+		getSiblings(siblings[i]);
+	}
+}
+
+function getGrandParents(person){
+	var parents = [];
+	getParents(person);
+	parents = personList;
+	personList = [];
+	for (var i = 0; i < parents.length; i++) {
+		getParents(parents[i]);
+	}
+}
+
+function getGreatGrandParents(person){
+	getGrandParents(person);
+	var grandParents = personList;
+	personList = [];
+	for (var i = 0; i < grandParents.length; i++) {
+		getParents(grandParents[i]);
+	}
+}
+
+function getGreatGrandChildren(person){
+	getGrandChildren(person);
+	var grandKids = personList;
+	personList = [];
+	for (var i = 0; i < grandKids.length; i++) {
+		getChildren(grandkids[i]);
+	}
+}
+
+function getGrandChildren(person){
+	var children = [];
+	getChildren(person);
+	children = personList;
+	personList = [];
+	for (var i = 0; i < children.length; i++) {
+		getChildren(children[i]);
+	}
+}
+
+function getAge(birthDate) {
+
+    	var today = new Date();
+    	var nowyear = today.getFullYear();
+    	var nowmonth = today.getMonth();
+    	var nowday = today.getDate();
+
+    	var currentDoB = birthDate.split("/");
+    	var birthyear = currentDoB[2];
+    	var birthmonth = currentDoB[0];
+    	var birthday = currentDoB[1];
+
+    	var age = nowyear - birthyear;
+    	var age_month = nowmonth - birthmonth;
+    	var age_day = nowday - birthday;
+
+    	if(age_month < 0 || (age_month == 0 && age_day < 0)) {
+            age = age -1;
+        }
+        age = parseInt(age);
+    	return age;
+	}
+function getOldestFromArray(listOfPeople){
+  		var OldestPerson = undefined;
+  		for (var i = 0; i < listOfPeople.length; i++) {
+  			var currentAge = getAge(listOfPeople[i].dob);
+  			if(OldestPerson != undefined){
+  				var previousAge = getAge(listOfPeople[i].dob);
+  			}
+  			if(OldestPerson == undefined){
+  				OldestPerson = listOfPeople[i];
+  			} else if(currentAge < previousAge){
+  				OldestPerson = listOfPeople[i];
+  			}
+  		}
+  		return OldestPerson;
+  	}
 function getDescendants(person){
 	for (var i = 0; i < people.length; i++) {
 		if(people[i].parents.length != 0){
