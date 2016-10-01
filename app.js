@@ -296,7 +296,6 @@ function userInterface(result){
 			var person = promptForName();
 			personList = [];
 			getDescendants(person);
-			errorCheck(personList);
 			if(personList.length != 0){
 				displayListOfPersons(personList, "descendants: ");
 			}
@@ -314,7 +313,6 @@ function userInterface(result){
 	  	var person = promptForName();
 	  	personList = [];
 	  	var nextKin = getNextOfKin(person);
-	  	errorCheck(nextKin);
 			if(nextKin != undefined){
 	  		displayPerson(nextKin, "Next of kin:\r\n");
 			}
