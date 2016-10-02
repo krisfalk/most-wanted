@@ -304,7 +304,6 @@ function userInterface(result){
   		personList = [];
   		var person = promptForName();
   		getImmediateFamily(person);
-  		errorCheck(personList);
 			if(personList.length != 0){
   			displayListOfPersons(personList, "Immediate family: ");
 			}
@@ -322,6 +321,8 @@ function userInterface(result){
 	    splitUserInput(prompt("Search up to 5 traits: divide each with a comma.\r\nTypes of terms you can choose from:\r\nage (only in the format #)\r\nage range (only in the format #-#)\r\nheight (only in the format #\'#\")\r\nweight (only in the format #lbs)\r\n occupation (single word)\r\neye color(single word)"));
 			if(personList.length != 0){
 				displayListOfPersons(personList, "Trait search: ");
+			}else{
+				alert("No people found with that search criteria.");
 			}
 	  	break;
 		case "exit":
@@ -472,7 +473,11 @@ function splitUserInput(userInput){
 			multiC = traits[i];
 		}
 	}
-	searchFiveTraits(weight, height, ageRangeLow, ageRangeHigh, multiA, multiB, multiC);
+	if(userInput != ''){
+		searchFiveTraits(weight, height, ageRangeLow, ageRangeHigh, multiA, multiB, multiC);
+	}else{
+		alert("Routing you to main screen due to blank entry.");
+	}
 }
 
 function searchFiveTraits(weight, height, ageRangeLow, ageRangeHigh, multiA, multiB, multiC){
