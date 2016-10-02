@@ -383,7 +383,7 @@ function promptForName(){
 
 function getPersonByName(firstNameSearch, lastNameSearch){
 	for (var i = 0; i < people.length; i++) {
-		if(people[i].firstName == firstNameSearch && people[i].lastName == lastNameSearch){
+		if(people[i].firstName.toLowerCase() == firstNameSearch.toLowerCase() && people[i].lastName.toLowerCase() == lastNameSearch.toLowerCase()){
 			return people[i];
 		}
 	}
