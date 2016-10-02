@@ -273,7 +273,7 @@ mainPrompt();
 
 
 function mainPrompt(){
-	var result = prompt("What do you want to do? Type one of following to search:\r\nType 'name' to search by first and last name.\r\nType 'descendants' to see all of a person's descendants.\r\nType 'next of kin' to see person's next of kin.\r\nType 'traits' to search by up to 5 criteria.\r\nType 'family' to see a person's immediate family.\r\nType 'exit' to end.");
+	var result = prompt("What would you like to do? Type one of following to search:\r\nType 'name' to search by first and last name.\r\nType 'descendants' to see all of a person's descendants.\r\nType 'next of kin' to see a person's next of kin.\r\nType 'traits' to search by up to 5 criteria.\r\nType 'family' to see a person's immediate family.\r\nType 'exit' to end.");
 	if(result != "name" && result != 'descendants' && result != 'next of kin' && result != 'traits' && result != 'family' && result != 'exit'){
 		alert("invalid entry. try again.");
 		mainPrompt();
