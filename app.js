@@ -321,7 +321,7 @@ function userInterface(result){
 			personList = [];
 	    splitUserInput(prompt("Search up to 5 traits: divide each with a comma.\r\nTypes of terms you can choose from:\r\nage (only in the format #)\r\nage range (only in the format #-#)\r\nheight (only in the format #\'#\")\r\nweight (only in the format #lbs)\r\n occupation (single word)\r\neye color(single word)"));
 			if(personList.length != 0){
-				displayListOfPersons(personList);
+				displayListOfPersons(personList, "Trait search: ");
 			}
 	  	break;
 		case "exit":
@@ -401,7 +401,7 @@ function displayPerson(person, displayString){
   					buildPerson = buildPerson + item + " " + (i + 1) + ": " + dataObject[person[item][i]].firstName + " " + dataObject[person[item][i]].lastName + "\r\n";
   				}
   			}else if(item == "height"){
-  				buildPerson = buildPerson + item + ": " + Math.round(person[item] / 12) + "'" + (person[item] % 12) + "\"" + "\r\n";
+  				buildPerson = buildPerson + item + ": " + Math.floor(person[item] / 12) + "'" + (person[item] % 12) + "\"" + "\r\n";
   			}else if(item == "currentSpouse"){
   				if(person[item] != null){
   					buildPerson = buildPerson + "Spouse: " + dataObject[person[item]].firstName + " " + dataObject[person[item]].lastName  + "\r\n";
