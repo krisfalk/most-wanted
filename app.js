@@ -318,11 +318,11 @@ function userInterface(result){
 	  	break;
 		case "traits":
 			personList = [];
-	    splitUserInput(prompt("Search up to 5 traits: divide each with a comma.\r\nTypes of terms you can choose from:\r\nage (only in the format #)\r\nage range (only in the format #-#)\r\nheight (only in the format #\'#\")\r\nweight (only in the format #lbs)\r\n occupation (single word)\r\neye color(single word)"));
+	    splitUserInput(prompt("Search up to 5 traits: separate each trait with a comma.\r\nTypes of terms you can choose from:\r\nage (only in the format #)\r\nage range (only in the format #-#)\r\nheight (only in the format #\'#\")\r\nweight (only in the format #lbs)\r\n occupation (as a single word)\r\neye color(as a single word)"));
 			if(personList.length != 0){
 				displayListOfPersons(personList, "Trait search: ");
 			}else{
-				alert("No people found with that search criteria.");
+				alert("No one was found with that search criteria.");
 			}
 	  	break;
 		case "exit":
